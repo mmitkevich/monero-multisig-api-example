@@ -6,15 +6,18 @@ option(ANDROID "Build for android")
 option(IOS "Build for ios")
 
 
-if (IOS)
-    INCLUDE(CMakeLists_IOS.txt)
-    set(CMAKE_OSX_SYSROOT "${CMAKE_IOS_SDK_ROOT}")
-    message("${CMAKE_OSX_SYSROOT}")
-endif()
-set(ARCH_FLAG "-march=armv8 -arch arm64")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 ${ARCH_FLAG} -isysroot ${CMAKE_OSX_SYSROOT}")
-set(MONERO_ROOT ${PROJECT_SOURCE_DIR}/../monero)
-set(SRC main.cpp)
+#if (IOS)
+#    INCLUDE(CMakeLists_IOS.txt)
+#    set(CMAKE_OSX_SYSROOT "${CMAKE_IOS_SDK_ROOT}")
+#    message("${CMAKE_OSX_SYSROOT}")
+#endif()
+#set(ARCH_FLAG "-march=armv8 -arch arm64")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+# ${ARCH_FLAG} -isysroot ${CMAKE_OSX_SYSROOT}")
+set(MONERO_ROOT ${PROJECT_SOURCE_DIR}/../monero-nodejs-libwallet/monero)
+set(DEPS_ROOT ${PROJECT_SOURCE_DIR}/../monero-nodejs-libwallet/deps)
+
+set(SRC ExaWallet.cpp main.cpp)
 
 include_directories(${MONERO_ROOT})
 include_directories(${MONERO_ROOT}/external/easylogging++)
@@ -50,13 +53,16 @@ else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pthread")
 
-    set(libs ${libs} dl device pcsclite)
-
+    set(libs ${libs} dl ) #device pcsclite
+    find_library(PCSC PCSC)
+    find_library(IOKit IOKit)
     link_directories(
-        /usr/lib/x86_64-linux-gnu/
-        ${MONERO_ROOT}/x86/lib
+        #/usr/lib/x86_64-linux-gnu/
+        /usr/local/Cellar/openssl/1.0.2n/lib/
+        ${MONERO_ROOT}/build/lib
+        ${DEPS_ROOT}
     )
 endif()
 
 add_executable(app-monero ${SRC})
-target_link_libraries(app-monero ${libs})
+target_link_libraries(app-monero ${libs} ${PCSC} ${IOKit})
