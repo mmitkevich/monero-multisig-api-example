@@ -3,7 +3,7 @@
 #include <memory>
 #include <unordered_set>
 
-#include <src/wallet/api/wallet2_api.h>
+#include <wallet2_api.h>
 
 class ExaChain;
 
