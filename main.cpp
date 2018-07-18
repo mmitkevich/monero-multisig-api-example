@@ -5,6 +5,7 @@
 #include <atomic>
 
 #include <boost/lexical_cast.hpp>
+#include <boost/thread/thread.hpp>
 
 #include "src/wallet/api/wallet2_api.h"
 #include "contrib/epee/include/misc_log_ex.h"
@@ -70,6 +71,7 @@ namespace {
 Context genWallets(std::unique_ptr<Monero::WalletManager>& walletManager) {
     Context context;
     context.wallet = std::unique_ptr<Monero::Wallet>(walletManager->createWallet("test-wallet", "123", "en", Monero::NetworkType::MAINNET));
+    boost::this_thread::sleep_for(boost::chrono::seconds(10));
 /*    context.wallet2 = std::unique_ptr<Monero::Wallet>(walletManager->createWallet("test-wallet2", "123", "en", Monero::NetworkType::MAINNET));
     context.wallet3 = std::unique_ptr<Monero::Wallet>(walletManager->createWallet("test-wallet3", "123", "en", Monero::NetworkType::MAINNET));
 
