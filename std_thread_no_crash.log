@@ -1,0 +1,20 @@
+Mikhails-MacBook-Pro:monero-multisig-api-example mike$ ./build/app-monero
+2018-07-19 12:41:50,414 DEBUG [device.ledger] [mike@unknown-host] [hw::ledger::device_ledger::device_ledger()] [/Users/mike/monero/src/device/device_ledger.cpp:225] Device 0 Created
+2018-07-19 12:41:50,414 TRACE [WalletAPI] [void Monero::WalletImpl::refreshThreadFunc()] [/Users/mike/monero/src/wallet/api/wallet.cpp:1933] refreshThreadFunc: starting refresh thread
+2018-07-19 12:41:50,414 TRACE [WalletAPI] [bool Monero::WalletImpl::create(const std::string &, const std::string &, const std::string &)] [/Users/mike/monero/src/wallet/api/wallet.cpp:427] wallet_path: test-wallet
+2018-07-19 12:41:50,414 TRACE [WalletAPI] [void Monero::WalletImpl::refreshThreadFunc()] [/Users/mike/monero/src/wallet/api/wallet.cpp:1940] refreshThreadFunc: waiting for refresh...
+2018-07-19 12:41:50,414 TRACE [WalletAPI] [bool Monero::WalletImpl::create(const std::string &, const std::string &, const std::string &)] [/Users/mike/monero/src/wallet/api/wallet.cpp:429] keys_file_exists: true  wallet_file_exists: true
+2018-07-19 12:41:50,415 ERROR [WalletAPI] attempting to generate or restore wallet, but specified file(s) exist.  Exiting to not riskoverwriting.
+2018-07-19 12:41:50,415 INFO  [WalletAPI] ~WalletImpl
+2018-07-19 12:41:50,415 DEBUG [WalletAPI] [mike@unknown-host] [virtual void Monero::WalletImpl::pauseRefresh()] [/Users/mike/monero/src/wallet/api/wallet.cpp:2015] pauseRefresh: refresh paused...
+2018-07-19 12:41:50,415 INFO  [WalletAPI] closing wallet...
+2018-07-19 12:41:50,415 INFO  [WalletAPI] Calling wallet::stop...
+2018-07-19 12:41:50,415 INFO  [WalletAPI] wallet::stop done
+2018-07-19 12:41:50,415 TRACE [WalletAPI] [void Monero::WalletImpl::refreshThreadFunc()] [/Users/mike/monero/src/wallet/api/wallet.cpp:1950] refreshThreadFunc: refresh lock acquired...
+2018-07-19 12:41:50,415 TRACE [WalletAPI] [void Monero::WalletImpl::refreshThreadFunc()] [/Users/mike/monero/src/wallet/api/wallet.cpp:1951] refreshThreadFunc: m_refreshEnabled: 0
+2018-07-19 12:41:50,415 TRACE [WalletAPI] [void Monero::WalletImpl::refreshThreadFunc()] [/Users/mike/monero/src/wallet/api/wallet.cpp:1952] refreshThreadFunc: m_status: 0
+2018-07-19 12:41:50,415 TRACE [WalletAPI] [void Monero::WalletImpl::refreshThreadFunc()] [/Users/mike/monero/src/wallet/api/wallet.cpp:1958] refreshThreadFunc: refresh thread stopped
+2018-07-19 12:41:50,415 DEBUG [net] [mike@unknown-host] [bool epee::net_utils::blocked_mode_client::shutdown()] [/Users/mike/monero/contrib/epee/include/net/net_helper.h:512] Problems at cancel: Bad file descriptor
+2018-07-19 12:41:50,415 DEBUG [net] [mike@unknown-host] [bool epee::net_utils::blocked_mode_client::shutdown()] [/Users/mike/monero/contrib/epee/include/net/net_helper.h:515] Problems at shutdown: Bad file descriptor
+2018-07-19 12:41:50,415 INFO  [WalletAPI] ~WalletImpl finished
+2018-07-19 12:41:50,415 DEBUG [device.ledger] [mike@unknown-host] [virtual hw::ledger::device_ledger::~device_ledger()] [/Users/mike/monero/src/device/device_ledger.cpp:230] Device 0 Destroyed

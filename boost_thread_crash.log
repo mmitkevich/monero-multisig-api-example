@@ -1,0 +1,34 @@
+Mikhails-MacBook-Pro:monero-multisig-api-example mike$ lldb ./build/app-monero
+...
+018-07-19 12:47:20,256 DEBUG [device.ledger] [mike@unknown-host] [hw::ledger::device_ledger::device_ledger()] [/Users/mike/monero/src/device/device_ledger.cpp:225] Device 0 Created
+2018-07-19 12:47:20,257 TRACE [WalletAPI] [bool Monero::WalletImpl::create(const std::string &, const std::string &, const std::string &)] [/Users/mike/monero/src/wallet/api/wallet.cpp:427] wallet_path: test-wallet
+2018-07-19 12:47:20,257 TRACE [WalletAPI] [void Monero::WalletImpl::refreshThreadFunc()] [/Users/mike/monero/src/wallet/api/wallet.cpp:1933] refreshThreadFunc: starting refresh thread
+2018-07-19 12:47:20,257 TRACE [WalletAPI] [bool Monero::WalletImpl::create(const std::string &, const std::string &, const std::string &)] [/Users/mike/monero/src/wallet/api/wallet.cpp:429] keys_file_exists: true  wallet_file_exists: true
+2018-07-19 12:47:20,257 TRACE [WalletAPI] [void Monero::WalletImpl::refreshThreadFunc()] [/Users/mike/monero/src/wallet/api/wallet.cpp:1940] refreshThreadFunc: waiting for refresh...
+2018-07-19 12:47:20,257 ERROR [WalletAPI] attempting to generate or restore wallet, but specified file(s) exist.  Exiting to not riskoverwriting.
+2018-07-19 12:47:20,257 INFO  [WalletAPI] ~WalletImpl
+2018-07-19 12:47:20,257 DEBUG [WalletAPI] [mike@unknown-host] [virtual void Monero::WalletImpl::pauseRefresh()] [/Users/mike/monero/src/wallet/api/wallet.cpp:2015] pauseRefresh: refresh paused...
+2018-07-19 12:47:20,257 INFO  [WalletAPI] closing wallet...
+2018-07-19 12:47:20,257 INFO  [WalletAPI] Calling wallet::stop...
+2018-07-19 12:47:20,257 INFO  [WalletAPI] wallet::stop done
+2018-07-19 12:47:20,257 TRACE [WalletAPI] [void Monero::WalletImpl::refreshThreadFunc()] [/Users/mike/monero/src/wallet/api/wallet.cpp:1950] refreshThreadFunc: refresh lock acquired...
+2018-07-19 12:47:20,257 TRACE [WalletAPI] [void Monero::WalletImpl::refreshThreadFunc()] [/Users/mike/monero/src/wallet/api/wallet.cpp:1951] refreshThreadFunc: m_refreshEnabled: 0
+2018-07-19 12:47:20,257 TRACE [WalletAPI] [void Monero::WalletImpl::refreshThreadFunc()] [/Users/mike/monero/src/wallet/api/wallet.cpp:1952] refreshThreadFunc: m_status: 0
+2018-07-19 12:47:20,257 TRACE [WalletAPI] [void Monero::WalletImpl::refreshThreadFunc()] [/Users/mike/monero/src/wallet/api/wallet.cpp:1958] refreshThreadFunc: refresh thread stopped
+Process 10614 stopped
+* thread #2, stop reason = EXC_BAD_ACCESS (code=EXC_I386_GPFLT)
+    frame #0: 0x00000001029e9060 libboost_thread.dylib`boost::detail::(anonymous namespace)::tls_destructor(void*) + 128
+libboost_thread.dylib`boost::detail::(anonymous namespace)::tls_destructor:
+->  0x1029e9060 <+128>: movq   0x8(%rbx), %rax
+    0x1029e9064 <+132>: movq   %rax, 0x198(%r12)
+    0x1029e906c <+140>: movq   (%rbx), %rdi
+    0x1029e906f <+143>: testq  %rdi, %rdi
+Target 0: (app-monero) stopped.
+(lldb) bt
+* thread #2, stop reason = EXC_BAD_ACCESS (code=EXC_I386_GPFLT)
+  * frame #0: 0x00000001029e9060 libboost_thread.dylib`boost::detail::(anonymous namespace)::tls_destructor(void*) + 128
+    frame #1: 0x00000001029e6332 libboost_thread.dylib`boost::(anonymous namespace)::thread_proxy(void*) + 146
+    frame #2: 0x00007fff66eb4661 libsystem_pthread.dylib`_pthread_body + 340
+    frame #3: 0x00007fff66eb450d libsystem_pthread.dylib`_pthread_start + 377
+    frame #4: 0x00007fff66eb3bf9 libsystem_pthread.dylib`thread_start + 13
+(lldb)
