@@ -4,43 +4,41 @@ project(app-monero)
 
 option(ANDROID "Build for android")
 option(IOS "Build for ios")
+option(ARCH "arm, arm64, x86_64")
 
+if (IOS)
+    INCLUDE(CMakeLists_IOS.txt)
+    set(CMAKE_OSX_SYSROOT "${CMAKE_IOS_SDK_ROOT}")
+    message("${CMAKE_OSX_SYSROOT}")
+endif()
 
-#if (IOS)
-#    INCLUDE(CMakeLists_IOS.txt)
-#    set(CMAKE_OSX_SYSROOT "${CMAKE_IOS_SDK_ROOT}")
-#    message("${CMAKE_OSX_SYSROOT}")
-#endif()
-#set(ARCH_FLAG "-march=armv8 -arch arm64")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O2")
-# ${ARCH_FLAG} -isysroot ${CMAKE_OSX_SYSROOT}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+
 set(MONERO_ROOT ${PROJECT_SOURCE_DIR}/../monero)
-set(DEPS_ROOT ${PROJECT_SOURCE_DIR}/deps)
 
 set(SRC  main.cpp)
 
 include_directories(${MONERO_ROOT})
 include_directories(${MONERO_ROOT}/external/easylogging++)
 
+set(Boost_USE_STATIC_LIBS ON)
+#set(Boost_USE_STATIC_RUNTIME ON)
+
+find_package(Boost 1.58 REQUIRED COMPONENTS system filesystem thread date_time chrono regex serialization program_options locale)
+
+link_directories(./deps)
+
 set(libs
     wallet_merged
     epee
     easylogging
     lmdb
-    boost_serialization
-    boost_thread
-    boost_system
-    boost_date_time
-    boost_filesystem
-    boost_chrono
-    boost_program_options
-    boost_regex
     unbound
     ssl
     crypto
     z)
 
-if (ANDROID)
+if (ANDROID)    
     link_directories(
         /opt/android/monero/armeabi-v7a/
         /opt/android/lib/armeabi-v7a/
@@ -48,9 +46,10 @@ if (ANDROID)
     )
 elseif(IOS)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -I ${BOOST_ROOT}")
+    set(CMAKE_LD_FLAGS "${CMAKE_LD_FLAGS} -v")
     link_directories(${PROJECT_SOURCE_DIR}/../monero-libs/ios-arm64)
 else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread") #  -fsanitize=thread
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pthread")
 
     set(libs ${libs} dl ) #device pcsclite
@@ -65,4 +64,4 @@ else()
 endif()
 
 add_executable(app-monero ${SRC})
-target_link_libraries(app-monero ${libs} ${PCSC} ${IOKit})
+target_link_libraries(app-monero ${libs} ${PCSC} ${IOKit} ${Boost_LIBRARIES})

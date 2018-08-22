@@ -5,7 +5,9 @@ MONERO_ROOT=../monero
 mkdir -p $MONERO_ROOT/build
 mkdir -p build
 pushd $MONERO_ROOT/build
-cmake -DCMAKE_BUILD_TYPE=Debug -DSTATIC=ON -DBUILD_GUI_DEPS=ON .. && make -j8 lmdb epee easylogging wallet_merged unbound
+#-DCMAKE_CXX_FLAGS="-fsanitize=thread"
+cmake -DCMAKE_BUILD_TYPE=Debug -DSTATIC=ON -DBUILD_GUI_DEPS=ON .. && make -j
+#-DBOOST_IGNORE_SYSTEM_PATHS=ON -DBOOST_ROOT=`pwd`/../../monero-nodejs-libwallet/boost 
 popd
 mkdir -p deps
 cplib libepee.a 
