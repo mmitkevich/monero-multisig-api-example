@@ -57,13 +57,14 @@ namespace {
         Context(const Context& context) = delete;
         Context(Context&& context) = default;
 
+        std::unique_ptr<WalletListener> listener;
+        std::unique_ptr<WalletListener> listener2;
+        std::unique_ptr<WalletListener> listener3;
+
         std::unique_ptr<Monero::Wallet> wallet;
         std::unique_ptr<Monero::Wallet> wallet2;
         std::unique_ptr<Monero::Wallet> wallet3;
 
-        std::unique_ptr<WalletListener> listener;
-        std::unique_ptr<WalletListener> listener2;
-        std::unique_ptr<WalletListener> listener3;
     };
 }
 
@@ -96,15 +97,17 @@ Context genWallets(std::unique_ptr<Monero::WalletManager>& walletManager) {
 Context openWallets(std::unique_ptr<Monero::WalletManager>& walletManager) {
     Context context;
 
-    context.wallet = std::unique_ptr<Monero::Wallet>(walletManager->openWallet("stagenet", "123", Monero::NetworkType::STAGENET));
+    context.wallet = std::unique_ptr<Monero::Wallet>(walletManager->openWallet("test-wallet2", "123", Monero::NetworkType::MAINNET));
 
     context.wallet->setListener(context.listener.get());
     //const std::string &daemon_address, uint64_t upper_transaction_size_limit = 0, const std::string &daemon_username = "", 
     //const std::string &daemon_password = "", bool use_ssl = false, bool lightWallet = false
-    context.wallet->init("127.0.0.1:1984", 0, "", "", false, true);
+    auto is_light_wallet = false;
+    auto daemon_address = "monero.exan.tech:18081";
+    context.wallet->init(daemon_address, 0, "", "", false, is_light_wallet);
     context.wallet->setTrustedDaemon(true);
-    bool isNewWallet = false;
-    context.wallet->lightWalletLogin(isNewWallet);
+    //bool isNewWallet = false;
+    //context.wallet->lightWalletLogin(isNewWallet);
 
     /*context.wallet2 = std::unique_ptr<Monero::Wallet>(walletManager->openWallet("test-wallet2", "123", Monero::NetworkType::MAINNET));
     context.wallet2->setListener(context.listener2.get());
@@ -129,7 +132,8 @@ void balance(Context& context) {
 void sync(Context& context) {
     std::cout << "syncing wallet 1" << std::endl;
     context.wallet->startRefresh();
-    context.listener->waitRefresh();
+    sleep(15);
+    //context.listener->waitRefresh();
 
     /*std::cout << "syncing wallet 2" << std::endl;
     context.wallet2->startRefresh();
@@ -271,7 +275,7 @@ int main(int argc, char ** argv) {
 
         auto cmd = std::string(argv[1]);
 
-        Monero::WalletManagerFactory::setLogLevel(Monero::WalletManagerFactory::LogLevel_Min);
+        Monero::WalletManagerFactory::setLogLevel(Monero::WalletManagerFactory::LogLevel_1);
         auto walletManager = std::unique_ptr<Monero::WalletManager>(Monero::WalletManagerFactory::getWalletManager());
         if (cmd == "generate") {
             genWallets(walletManager);
