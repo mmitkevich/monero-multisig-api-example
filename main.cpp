@@ -132,7 +132,11 @@ void balance(Context& context) {
 void sync(Context& context) {
     std::cout << "syncing wallet 1" << std::endl;
     context.wallet->startRefresh();
-    sleep(15);
+    sleep(3);
+    context.wallet->pauseRefresh();
+    sleep(3);
+    context.wallet->startRefresh();
+    
     //context.listener->waitRefresh();
 
     /*std::cout << "syncing wallet 2" << std::endl;
@@ -275,7 +279,7 @@ int main(int argc, char ** argv) {
 
         auto cmd = std::string(argv[1]);
 
-        Monero::WalletManagerFactory::setLogLevel(Monero::WalletManagerFactory::LogLevel_1);
+        Monero::WalletManagerFactory::setLogLevel(Monero::WalletManagerFactory::LogLevel_0);
         auto walletManager = std::unique_ptr<Monero::WalletManager>(Monero::WalletManagerFactory::getWalletManager());
         if (cmd == "generate") {
             genWallets(walletManager);
