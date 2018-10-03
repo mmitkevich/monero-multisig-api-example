@@ -133,6 +133,8 @@ void sync(Context& context) {
     std::cout << "syncing wallet 1" << std::endl;
     context.wallet->startRefresh();
     sleep(3);
+    context.wallet->rescanBlockchainAsync();
+    sleep(3);
     context.wallet->pauseRefresh();
     sleep(3);
     context.wallet->startRefresh();
