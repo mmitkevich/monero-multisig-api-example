@@ -10,6 +10,28 @@
 #include "contrib/epee/include/misc_log_ex.h"
 
 namespace {
+
+    struct Clock
+    {
+        typedef std::chrono::steady_clock::time_point time_point;
+        typedef std::chrono::milliseconds duration;
+        time_point start;
+
+        Clock() {
+            reset();
+        }
+
+        duration elapsed() {
+            Clock next;
+            auto result = std::chrono::duration_cast<duration>(next.start - start);
+            return result;
+        }
+
+        void reset() {
+            start = std::chrono::steady_clock::now();
+        }
+    };
+    
     struct WalletListener: public Monero::WalletListener
     {
         WalletListener() : active_(false) {}
@@ -22,13 +44,19 @@ namespace {
 
         virtual void newBlock(uint64_t height) {
             if (active_) {
-                std::cout << "updated blockchain height: " << height << std::endl;
+                if(last_refresh_.elapsed().count() > 10000) {
+                    std::cout << "updated blockchain height: " << height << std::endl;
+                    last_refresh_.reset();
+                }
             }
         }
 
-        virtual void updated() {}
+        virtual void updated() {
+                std::cout <<"\n\n*** updated\n\n";
+        }
         virtual void refreshed() {
             if (active_) {
+                std::cout <<"\n\n*** refreshed\n\n";
                 promise_->set_value();
             }
         }
@@ -42,6 +70,8 @@ namespace {
 
             active_ = false;
         }
+
+        Clock last_refresh_;
 
         std::atomic<bool> active_;
         std::unique_ptr<std::promise<void>> promise_;
@@ -131,16 +161,21 @@ void balance(Context& context) {
 
 void sync(Context& context) {
     std::cout << "syncing wallet 1" << std::endl;
+    std::cout<<"\n\n*** START_REFRESH\n\n";
     context.wallet->startRefresh();
     sleep(3);
+    std::cout<<"\n\n*** RESCAN_BLOCKCHAIN_ASYNC\n\n";
     context.wallet->rescanBlockchainAsync();
     sleep(3);
+    std::cout<<"\n\n*** PAUSE_REFRESH\n\n";
     context.wallet->pauseRefresh();
     sleep(3);
+    std::cout<<"\n\n*** START_REFRESH\n\n";
     context.wallet->startRefresh();
-    
-    //context.listener->waitRefresh();
-
+    sleep(3);
+    std::cout<<"\n\n*** WAIT_REFRESH - 1\n\n";
+    context.listener->waitRefresh();
+    std::cout<<"\n\n*** WAIT_REFRESH - DONE\n\n";
     /*std::cout << "syncing wallet 2" << std::endl;
     context.wallet2->startRefresh();
     context.listener2->waitRefresh();
